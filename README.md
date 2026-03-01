@@ -121,7 +121,7 @@ SERPAPI_API_KEY=your_api_key_here (Register for key (https://serpapi.com/))
 
 ## Usage
 
-
+![Demo](docs/assets/cliassist.gif)
 
 ## Architecture
 ### Core Components
