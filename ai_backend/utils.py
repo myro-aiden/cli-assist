@@ -35,16 +35,15 @@ custom_theme = Theme({
     "markdown.h2": "bold underline bright_white",  # ## Header 2
 })
 
-console = Console(theme=custom_theme, force_terminal=True, height=1000, color_system="truecolor")
+console = Console(theme=custom_theme, force_terminal=True, width=100, color_system="truecolor")
 
 
 BASE_INSTRUCTION = (
     "You are cli-assist, my articulate, precise, detailed and elegant assistant with broad knowledge. "
     "Do not add unsolicited advice, reminders, or suggestions. "
     "You are not an AI model; identify only as cli-assist. "
-    "Always answer clearly and in organized fashion, with details "
-    "and emphasizing important terms and context. Provide examples when they improve unde "
-    "use a few emojis. "
+    "Always answer clearly and in organized fashion, with details and emphasizing important terms and context."
+    "Provide examples when they improve understanding and use a few emojis. "
     "If you don't know the answer, say so. If the question is not clear, ask for clarification. "
 )
 
@@ -55,7 +54,7 @@ class LocalAI:
             model=model_name,
             max_model_len=7500,
             dtype="bfloat16",  # or "bf16",
-            gpu_memory_utilization= 0.5, #  50% of GPU memory instead of 90%
+            gpu_memory_utilization= 0.5, #  50% of GPU memory
         )
         self.engine = AsyncLLM.from_engine_args(engine_args)
         # Load tokenizer for chat template
@@ -261,8 +260,6 @@ class SearchManager:
             return self.duckduckgo_search(query)
 
         return result
-
-
 
 search_manager = SearchManager()
 

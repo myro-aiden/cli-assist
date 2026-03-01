@@ -1,126 +1,166 @@
 # cli-assist 🔴
 
-A terminal-based AI assistant that combines local LLM inference with real-time web search capabilities. Powered by vLLM and Llama 3.2, cli-assist provides articulate, detailed responses with internet-sourced context when needed. This open-source version allows users to develop and add fuctionality to this cli tool.
+A framework, a personal terminal-based AI assistant that combines local LLM inference with real-time web search capabilities and endless potential tools. This tool, when offline, is bound to privacy as its operations are entirely hosted, and so reliant on your own machine. Powered by vLLM, CUDA and a local LLM (Meta Llama 3.2 3B in this case), cli-assist provides articulate, detailed responses with internet-sourced context when needed. This open-source version allows users to develop and add functionality to their liking.
 
 ## Features
 
-- **Local LLM Inference**: Currently Runs Llama 3.2 3B Instruct (Other models can be used, pipline may need to be updated for other-than Llama models) locally using vLLM for fast, private inference
+- **Local LLM Inference**: Currently Runs Llama 3.2 3B Instruct (Other models can be used, pipeline may need to be updated for other-than Llama models) locally using vLLM for fast, private inference
 - **Smart Web Search**: Detects when online information is needed (through keywords, this method can be upgraded) (news, current events, data, trends, etc.)
 - **Session Memory**: Maintains conversation history and automatically generates summaries and titles
 - **Rich Terminal UI**: Beautiful formatted output with syntax highlighting, tables, and live rendering, still needs expanding and polishing
 - **Chat Interface**: Arrow-key navigation, multi-turn conversations, session management
-- **Dynamic URL Filtering**: Heuristic-based filtering to prioritize quality sources (academic, government, documentation) (Can be upgrated to access more internet content)
+- **Dynamic URL Filtering**: Heuristic-based filtering to prioritize quality sources (academic, government, documentation) (Can be upgraded/deepened to access more internet content)
 - **Content Quality Assessment**: Evaluates scraped content for accessibility and paywall detection
 
 ## Installation
 
-## System Requirements
+### System Requirements
 
-**⚠️ Currently Linux-only due to vLLM** (Native Windows not tested and has limitations/macOS support planned)
+**⚠️ Currently Linux-only** (Native Windows not tested and has limitations/macOS support planned)
 
-- WSL2 on Windows or Linux OS (Ubuntu 20.04+, Debian 11+, or similar)
-- Python 3.10+ (3.11.7)
+- WSL on Windows or Linux OS (Ubuntu 20.04 LTS for WSL Tested, Debian 11+ and others untested but should work)
+- Python 3.10+ (3.11 Recommended)
 - NVIDIA GPU with 4GB+ VRAM (recommended)
 - 8GB RAM minimum
-- CUDA 11.8+
+- CUDA 12.8 (Recommended)
 
-### Setup
+**✅ Currently tested on:**
+- CPU: AMD Ryzen 7 7800X3D 8-Core Processor
+- GPU: NVIDIA GeForce RTX 4080
+- RAM: 64GB DDR5 6000 MT/s
+- Windows 11
+- WSL (Ubuntu 20.04 LTS)
 
+## Setup
+
+### Ubuntu 20.04 LTS on WSL:
+1. Open / Enter WSL or your Linux system:
 ```bash
-# Ubuntu/Debian
+WSL
+```
+2. Add the deadsnakes repository for Python 3.11:
+```bash
+</> WSL
+sudo add-apt-repository ppa:deadsnakes/ppa
+```
+3. Install initial dependencies:
+```bash
+</> WSL
+sudo apt install python3.11 python3.11-dev python3.11-venv python3-pip git build-essential
+```
+4. 
+```bash
+</> WSL
 sudo apt update
-sudo apt install python3.11 python3.11-pip python3.11-venv git
-1) Clone the repository from github (git clone https://github.com/myro-aiden/cli-assist.git), then:
+```
+5. 
+```bash
+</> WSL
+sudo apt upgrade
+```
+6. Clone the repository from GitHu
+```bash
+</> WSL
+git clone https://github.com/myro-aiden/cli-assist.git
+```
+7. 
+```bash
+</> WSL
 cd cli-assist
-python3.11 -m venv "venv" #create a venv using python3.11 (Recommended) or the one you choose
+```
+8. 
+```bash
+</> WSL
+python3.11 -m venv "venv"
+``` 
+
+### Next, from within the venv:
+1. Download CUDA Toolkit 12.8 for your distro (https://developer.nvidia.com/cuda-12-8-0-download-archive) (Delete the leftover .deb file)
+2. Download PyTorch for CUDA 12.8 (https://pytorch.org/get-started/locally/)
+3. Download the following packages to facilitate flash-attention (https://github.com/Dao-AILab/flash-attention)
+```bash
+</> WSL
+pip install -U pip psutil wheel setuptools packaging ninja
+```
+4. Download required libraries:
+```bash
+</> WSL
+MAX_JOBS=4 pip install -r requirements.txt --no-build-isolation
+```
+This will take a while in most cases due to FlashAttention, check link in previous step. It SHOULD work, but if you cannot wait, or it simply doesn't, remove "flash_attn==2.8.3" from requirements.txt and run: 
+```bash
+</> WSL
 pip install -r requirements.txt
-# Install in editable mode (installs dependencies and creates `cliassist` command that runs the script)
+```
+5. Install in editable mode:
+```bash
+</> WSL
 pip install -e .
 ```
-
 This will:
-1. Install all dependencies (vLLM, transformers, click, etc.)
-2. Download the Llama 3.2 3B Instruct model on first run
-3. Create a `cliassist` command-line entry point, this entry point can be renamed and setup in setup.py
 
-## Usage
+a. Install all dependencies
 
-Simply type:
-
+b. Download the Llama 3.2 3B Instruct model on first run (You will need to request access (https://huggingface.co/meta-llama/Llama-3.2-3B) and then import a Hugging Face token for this model through the Hugging Face CLI (https://huggingface.co/docs/huggingface_hub/en/guides/cli)  prior):
 ```bash
-cliassist
+</> WSL
+hf auth login
 ```
-
-Then:
-1. **Select a session**: Choose a previous conversation or start a new one
-2. **Chat**: Type your questions/prompts
-3. **Exit**: Type `exit`, `quit`, or press `Ctrl+C`
-4. **Save**: Optionally save the conversation with auto-generated title and summary
-
-**NOTE:** Prepending ! allows you to execute terminal commands outside the "application"
-    Example:
-
-    ```bash
-    !ls
-    ``` 
-    will list the content of your present directory (Alot can be done with this.)
-
-
-### Example Interactions
-
-```
-🔴 : cli-assist ready. type 'exit' or similar to quit.
-
-User: What are the latest developments in AI?
-🔴 : [Searches the web and responds with current information]
-
-User: Tell me more about the transformer architecture
-🔴 : [Uses local context from the model, no search needed]
-
-User: What happened in the markets today?
-🔴 : [Detects keyword for web search, fetches latest financial data]
-```
-
-## Architecture
-### Core Components
-
-- **`ai_backend/__main__.py`**: Entry point
-- **`ai_backend/cliassist.py`**: Main CLI application and conversation loop
-- **`ai_backend/utils.py`**: 
-  - `LocalAI`: Async wrapper around vLLM for LLM inference
-  - `SearchManager`: Handles web search (SerpAPI + DuckDuckGo fallback)
-  - `DynamicURLFilter`: Scores and filters URLs by quality
-  - `ContentQualityAssessor`: Evaluates scraped content
-
-### Conversation Flow
-
-```
-User Input
-    ↓
-Detect if search needed (keyword heuristics)
-    ↓
-[Optional] Fetch + summarize URLs
-    ↓
-Build prompt with session context + online info
-    ↓
-Query LLM (vLLM)
-    ↓
-Stream response with Rich formatting
-    ↓
-Update session memory
-```
-
-## Configuration
+c. Create a `cliassist` command-line entry point, this entry point can be renamed and configured in setup.py (You would run the script by entering this name within the venv)
 
 ### Environment Variables
 
 Create a `.env` file in the project root:
 
-```env
-SERPAPI_API_KEY=your_api_key_here
+```bash
+</>.env
+SERPAPI_API_KEY=your_api_key_here (Register for key (https://serpapi.com/))
 ```
 
-**Note**: SerpAPI is optional, but I recommend you use it because there is a counter intigrated that ensures the limit 250 searches per month is not exceeded which is alot already. If not set or quota is exceeded, the app falls back to DuckDuckGo.
+**Note**: SerpAPI is optional, but I recommend you use it because there is a counter integrated that ensures the limit 250 searches per month is not exceeded, which rarely is. If not set or quota is exceeded, the app falls back to DuckDuckGo.
+
+## Usage
+
+
+
+## Architecture
+### Core Components
+
+- **`ai\_backend/\_\_main\_\_.py`**: Entry point
+- **`ai\_backend/cliassist.py`**: Main CLI application and conversation loop
+- **`ai\_backend/utils.py`**:
+- `LocalAI`: Async wrapper around vLLM for LLM inference
+- `SearchManager`: Handles web search (SerpAPI + DuckDuckGo fallback)
+- `DynamicURLFilter`: Scores and filters URLs by quality
+- `ContentQualityAssessor`: Evaluates scraped content
+
+### Conversation Flow
+
+```
+System Input (Base Instructions, Context Engineering)
+    **↓**
+
+User Input
+    **↓**
+
+Detect if search needed (keyword heuristics)
+    **↓**
+
+[Optional] Fetch + summarize URLs
+    **↓**
+
+Build prompt with inputs and online info + session context if any
+    **↓**
+
+Query LLM (vLLM, CUDA)
+    **↓**
+
+Stream response with Rich formatting
+    **↓**
+
+Update session memory
+```
+
 
 ### Model Settings
 
@@ -139,6 +179,7 @@ engine_args = AsyncEngineArgs(
     gpu_memory_utilization=0.5,  # GPU memory percentage
 )
 ```
+Ultimately, thisi is designed for you to use any model youd like but it will need to be tweeked depending on the model's function. The curent code is suitable for text-to-text models.
 
 ## Session Management
 
@@ -167,18 +208,11 @@ Sessions are stored in the `memory/` directory as JSON files with format:
 - **Inference speed**: ~10-50 tokens/second depending on GPU
 - **GPU memory**: ~6-8GB with 50% utilization setting
 
-
 ## Troubleshooting
 Traceback calls often suffice to understand and solve most issues
 
-### Model Download Issues
-If the model fails to download, manually download it from hugging face Official Website, it should look something like the following:
-```bash
-huggingface-cli download meta-llama/Llama-3.2-3B-Instruct --local-dir ./models
-```
-
 ### Out of Memory
-Reduce `gpu_memory_utilization` or `max_model_len` in `utils.py`
+Reduce `gpu_memory_utilization` or `max_model_len` in `utils.py` (Read Traceback)
 
 ### Web Search Not Working
 - Check SerpAPI quota: https://serpapi.com/account
@@ -190,18 +224,6 @@ Reinstall the package:
 ```bash
 pip install -e .
 ```
-
-## Dependencies
-
-- **vllm**: LLM serving engine
-- **transformers**: Model tokenizers and utilities
-- **prompt-toolkit**: Terminal UI and keybindings
-- **rich**: Terminal formatting and tables
-- **beautifulsoup4**: HTML parsing
-- **readability-lxml**: Content extraction
-- **requests**: HTTP requests
-- **click**: CLI utilities
-- **dotenv**: Environment variable loading
 
 ## License
 
@@ -226,16 +248,17 @@ If you use this software, attribution is appreciated:
 Based on cli-assist by Mory K Diane
 https://github.com/myro-aiden/cli-assist
 ```
+
 ## Contributing
 
 Feel free to open issues or PRs for improvements!
 
 ## Future Enhancements
-
-This is yours to build upon, a payed version might come out with extras, but this can be what you want it to be for yourself. I am always open to offers should you like to sell this somehow.
+This is yours to build upon, a paid version might come out with extras, but this can be what you want it to be for yourself. I am always open to offers should you like to sell this somehow.
 
 ## Author
 
 Created by Mory K Diane
+
 - GitHub: @myro-aiden (https://github.com/myro-aiden)
 - Also known as: cramoisi

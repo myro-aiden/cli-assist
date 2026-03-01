@@ -99,7 +99,6 @@ async def terminal_menu(title: str, options: List[Tuple[str, str]]) -> str:
             result.append((style, prefix + text + "\n"))
         return result
 
-
     control = FormattedTextControl(get_menu_text)
     container = Window(content=control, always_hide_cursor=True)
     layout = Layout(HSplit([container]))
@@ -426,7 +425,7 @@ class cliassist:
                 f,
                 indent=2,
             )
-        type_out(f"🔴 : remembered as '{self.title}'. wa salam 🌅")
+        type_out(f"🔴 : remembered as '{self.title}'. peace 🌅")
         return self.session_file
 
     @staticmethod
@@ -634,8 +633,6 @@ class cliassist:
             
             return combined.strip()
         
-        
-    
     async def ask(self, prompt: str) -> str:
         # Prepare the prompt for the model (instructions only)
         full_prompt = self.base_instruction
@@ -715,7 +712,6 @@ async def async_main():
                     type_out("🔴 : out of mind, out of sight. 🌅")
                 break
 
-
             # Handle shell commands
             if user_input.startswith("!"):
                 command = user_input[1:].strip()
@@ -736,7 +732,6 @@ async def async_main():
 def main():
     import asyncio
     asyncio.run(async_main())
-
 
 if __name__ == "__main__":
     main()
