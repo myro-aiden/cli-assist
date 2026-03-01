@@ -54,4 +54,5 @@ checkpoints/
 *.pth
 *.pt
 *.ckpt
-EOF
+EOFdocs/assets/*.gif
+*.gif
