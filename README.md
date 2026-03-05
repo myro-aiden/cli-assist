@@ -1,3 +1,4 @@
+[![Latest Release](https://img.shields.io/github/v/release/myro-aiden/cli-assist)](https://github.com/myro-aiden/cli-assist/releases)
 # cli-assist 🔴
 
 A framework, a personal terminal-based AI assistant that combines local LLM inference with real-time web search capabilities and endless potential tools. This tool, when offline, is bound to privacy as its operations are entirely hosted, and so reliant on your own machine. Powered by vLLM, CUDA and a local LLM (Meta Llama 3.2 3B in this case), cli-assist provides articulate, detailed responses with internet-sourced context when needed. This open-source version allows users to develop and add functionality to their liking.
@@ -85,12 +86,12 @@ pip install -U pip psutil wheel setuptools packaging ninja
 4. Download required libraries:
 ```bash
 </> WSL
-MAX_JOBS=4 pip install -r requirements.txt --no-build-isolation
+MAX_JOBS=4 uv pip install -r requirements.txt --no-build-isolation
 ```
 This will take a while in most cases due to FlashAttention, check link in previous step. It SHOULD work, but if you cannot wait, or it simply doesn't, remove "flash_attn==2.8.3" from requirements.txt and run: 
 ```bash
 </> WSL
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 5. Install in editable mode:
 ```bash
@@ -101,10 +102,11 @@ This will:
 
 a. Install all dependencies
 
-b. Download the Llama 3.2 3B Instruct model on first run (You will need to request access (https://huggingface.co/meta-llama/Llama-3.2-3B) and then import a Hugging Face token for this model through the Hugging Face CLI (https://huggingface.co/docs/huggingface_hub/en/guides/cli)  prior):
+b. Download the Llama 3.2 3B Instruct model on first run (You will need to request access (https://huggingface.co/meta-llama/Llama-3.2-3B) and then import a Hugging Face token for this model through the Hugging Face CLI (https://huggingface.co/docs/huggingface_hub/en/guides/cli)  prior) & install hf_transfer:
 ```bash
 </> WSL
 hf auth login
+pip install hf_transfer
 ```
 c. Create a `cliassist` command-line entry point, this entry point can be renamed and configured in setup.py (You would run the script by entering this name within the venv)
 
@@ -207,6 +209,7 @@ Sessions are stored in the `memory/` directory as JSON files with format:
 - **Subsequent runs**: Start in ~30 seconds
 - **Inference speed**: ~10-50 tokens/second depending on GPU
 - **GPU memory**: ~6-8GB with 50% utilization setting
+- **Terminal Width**: Your terminal width must be at least as wide as you specify in code [`utils.py:L38`](https://github.com/myro-aiden/cli-assist/blob/468d30320cb82245eae50081f568568970301598/ai_backend/utils.py) 
 
 ## Troubleshooting
 Traceback calls often suffice to understand and solve most issues
